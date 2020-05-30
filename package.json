@@ -1,0 +1,21 @@
+{
+  "name": "mail",
+  "version": "1.0.0",
+  "description": "",
+  "main": "epic.js",
+  "scripts": {
+    "start": "node epic.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "formidable": "^1.2.1",
+    "mongoose": "^5.4.2",
+    "mysql": "^2.16.0",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0",
+    "request": "^2.88.0",
+    "socket.io": "^2.2.0"
+  }
+}
