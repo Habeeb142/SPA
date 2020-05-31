@@ -41,6 +41,11 @@
 							Passwords not compatible
 						</div>
 						<%} %>
+                        <% if(status=="img_err"){ %>
+						<div class="alert alert-danger text-center text-uppercase font-weight-bold font-italic" style="font-size: 12px">
+							File Size more than 1mb
+						</div>
+						<%} %>
 						<% if(status=="fillform_err"){ %>
 						<div class="alert alert-warning text-sm-center text-uppercase font-italic font-weight-bold" style="font-size: 12px">
 							Please fill all the inputs correctly

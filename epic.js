@@ -15,8 +15,11 @@ var express = require('express');
 const epic = express();
 
 //connecting to locahost::::::::::::::::::::::::::::::::::::::::::::::::::
-myPort = epic.listen(port = 3000 || env.process.PORT, ()=>{
-    console.log("EPIC is listening to port "+port+" sir!");
+const port = process.env.PORT || 3000;
+
+//connecting to host::::::::::::::::::::::::::::::::::::::::::::::::::
+const server = epic.listen(port, ()=>{
+    console.log("app is listening to port sir!");
 });
 
 // cookie::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -73,55 +76,60 @@ epic.post('/signup', (req, res)=>{
             if(fields.cpassword == fields.password){
                 
                 let tmp = files.file.path;
-                let pix = files.file.name;
-                let img = pix;
-                let imgLink = "./public/userImages/"+pix;
-
+                let size = files.file.size;
+                
                 let newUserInfo = {
                     firstname: fields.firstname,
                     lastname: fields.lastname,
                     mobile: fields.mobile,
-                    password: fields.password,
-                    file: img
+                    password: fields.password
                 }
-                // storing image url and other data in db
-                cloudinary.uploader.upload(tmp, function(result) { 
 
-                    // checking if mobile data already exist::::::::::::::::::::::::::::::::::::::::::::::::::::
-                    sql_select_mobile = `SELECT mobile FROM profile_tb where mobile = '${newUserInfo.mobile}'`;
-                    connection.query(sql_select_mobile, (err, data)=>{
-                        // if user already exist
-                        if(data.length) {
-                            res.render('signup', { status: 'user_already_exist', firstname: newUserInfo.firstname, mobile: null, lastname: fields.lastname })
-                        }
-                        // if user doesnt exist
-                        else {
-                            // encrypting password
-                            bcrypt.hash(newUserInfo.password, salt, (err, encrypted) => {
-                                newUserInfo.password = encrypted 
+                // checking if file size below 1mb
+                if(size<= 1000000) {
+                    // storing image url and other data in db
+                    cloudinary.uploader.upload(tmp, function(result) { 
     
-                                //putting into database and sending from temporary location to permanent location::::::::::::::::::::::::::::::::::::
-                                
-                                    sql_insert = `INSERT into profile_tb (firstname, lastname, mobile, password, file) values('${newUserInfo.firstname}', '${newUserInfo.lastname}', '${newUserInfo.mobile}','${newUserInfo.password}','${result.url}')`;
-                                    connection.query(sql_insert, (err,data)=>{
-                                        if(err) {
-                                            throw err;
-                                        }
-                                        else{
-                                            sql_select_id = `SELECT id FROM profile_tb where mobile = '${newUserInfo.mobile}' AND password = '${newUserInfo.password}'`;
-                                            connection.query(sql_select_id, (err, data)=>{
-                                                // console.log(data[0].id)
-                                                res.render('index', { status: 'signedIn', id: data[0].id, mobile: null});
-                                            })
-                                        }
-                                    });
-                                
-                                
-                            })
-                        }
-                    }) 
+                        // checking if mobile data already exist::::::::::::::::::::::::::::::::::::::::::::::::::::
+                        sql_select_mobile = `SELECT mobile FROM profile_tb where mobile = '${newUserInfo.mobile}'`;
+                        connection.query(sql_select_mobile, (err, data)=>{
+                            // if user already exist
+                            if(data.length) {
+                                res.render('signup', { status: 'user_already_exist', firstname: newUserInfo.firstname, mobile: null, lastname: fields.lastname })
+                            }
+                            // if user doesnt exist
+                            else {
+                                // encrypting password
+                                bcrypt.hash(newUserInfo.password, salt, (err, encrypted) => {
+                                    newUserInfo.password = encrypted 
+        
+                                    //putting into database and sending from temporary location to permanent location::::::::::::::::::::::::::::::::::::
+                                    
+                                        sql_insert = `INSERT into profile_tb (firstname, lastname, mobile, password, file) values('${newUserInfo.firstname}', '${newUserInfo.lastname}', '${newUserInfo.mobile}','${newUserInfo.password}','${result.url}')`;
+                                        connection.query(sql_insert, (err,data)=>{
+                                            if(err) {
+                                                throw err;
+                                            }
+                                            else{
+                                                sql_select_id = `SELECT id FROM profile_tb where mobile = '${newUserInfo.mobile}' AND password = '${newUserInfo.password}'`;
+                                                connection.query(sql_select_id, (err, data)=>{
+                                                    // console.log(data[0].id)
+                                                    res.render('index', { status: 'signedIn', id: data[0].id, mobile: null});
+                                                })
+                                            }
+                                        });
+                                    
+                                    
+                                })
+                            }
+                        }) 
+    
+                     })           
+                }
+                else {
+                    res.render('signup', { status: 'img_err', firstname: fields.firstname, mobile: fields.mobile, lastname: fields.lastname })
+                }
 
-                 })
 
                
             }
