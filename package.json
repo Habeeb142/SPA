@@ -7,10 +7,13 @@
     "start": "node epic.js"
   },
   "dependencies": {
+    "bcrypt": "^4.0.1",
     "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.5",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "formidable": "^1.2.1",
+    "localStorage": "^1.0.4",
     "mongoose": "^5.4.2",
     "mysql": "^2.16.0",
     "passport": "^0.4.1",

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SPA | Signup</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.0/animate.css">
@@ -26,7 +26,7 @@
 			<div class="row">
 				<div class="col-lg-6">
 					<div class="login_box_img col-12">
-						<img class="img-fluid" src="img/login.jpg" alt="">
+						<img class="img-fluid" src="/img/login.jpg" alt="">
 						<div class="hover text-center offset-md-3 offset-2">
 							<h4>SPA?</h4>
 							<p style="font-size: 13px">SPA simply means Simple Profile Application which allows you to simply sign up, sign in and modify your profile...</p>
@@ -37,25 +37,30 @@
 				<div class="col-lg-6">
                     <div class="login_form_inner col-12">
                         <% if(status=="password_err"){ %>
-                            <div class="alert alert-danger text-center text-uppercase font-weight-bold font-italic" style="font-size: 12px">
-                                Passwords not compatible
-                            </div>
-                            <%} %>
-                            <% if(status=="fillform_err"){ %>
-                            <div class="alert alert-warning text-sm-center text-uppercase font-italic font-weight-bold" style="font-size: 12px">
-                                Please fill all the inputs correctly
-                            </div>
-                            <%} %>
+						<div class="alert alert-danger text-center text-uppercase font-weight-bold font-italic" style="font-size: 12px">
+							Passwords not compatible
+						</div>
+						<%} %>
+						<% if(status=="fillform_err"){ %>
+						<div class="alert alert-warning text-sm-center text-uppercase font-italic font-weight-bold" style="font-size: 12px">
+							Please fill all the inputs correctly
+						</div>
+						<%} %>
+						<% if(status=="user_already_exist"){ %>
+						<div class="alert alert-warning text-sm-center text-uppercase font-italic font-weight-bold" style="font-size: 12px">
+							A user with the mobile number already exists
+						</div>
+						<%} %>
 						<h3 class="text-light">Sign Up here</h3>
 						<form class="row login_form" action="/signup" method="POST" enctype="multipart/form-data" id="contactForm" novalidate="novalidate">
 							<div class="col-md-12 form-group">
-								<input type="text" class="form-control" name="firstname" value="<%firstname%>" style="background-color: black" placeholder="firstname" onfocus="this.placeholder = ''" onblur="this.placeholder = 'firstname'">
+								<input type="text" class="form-control" name="firstname" value="<%=firstname%>" style="background-color: black" placeholder="firstname" onfocus="this.placeholder = ''" onblur="this.placeholder = 'firstname'">
 							</div>
 							<div class="col-md-12 form-group">
-								<input type="text" class="form-control" name="lastname" value="<%lastname%>" style="background-color: black" placeholder="lastname" onfocus="this.placeholder = ''" onblur="this.placeholder = 'lastname'">
+								<input type="text" class="form-control" name="lastname" value="<%=lastname%>" style="background-color: black" placeholder="lastname" onfocus="this.placeholder = ''" onblur="this.placeholder = 'lastname'">
 							</div>
 							<div class="col-md-12 form-group">
-								<input type="number" class="form-control" name="mobile" value="<%mobile%>" style="background-color: black" placeholder="Mobile" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mobile'">
+								<input type="number" class="form-control" name="mobile" value="<%=mobile%>" style="background-color: black" placeholder="Mobile" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mobile'">
 							</div>
 							<div class="col-md-12 form-group">
 								<input type="password" class="form-control" style="background-color: black" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
@@ -69,7 +74,6 @@
 							
 							<div class="col-md-12 form-group">
 								<button type="submit" value="submit" class="primary-btn">Sign Up</button>
-								<a href="#">Forgot Password?</a>
 							</div>
 						</form>
 					</div>
