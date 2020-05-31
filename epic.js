@@ -53,15 +53,6 @@ let connection = mysql.createConnection({
     database: "heroku_490bccbc1f2bdbb"
 });
 
-connection.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-  var sql = "CREATE TABLE profile_tb (id INT AUTO_INCREMENT PRIMARY KEY, firstname VARCHAR(255), lastname VARCHAR(255), mobile VARCHAR(255), file VARCHAR(255), password VARCHAR(255))";
-  connection.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("Table created");
-  });
-});
 //index - onload::::::::::::::::::::::::;:::::::::::::::::::::::::::::::::
 epic.get('/', (req, res)=>{
     res.render('index', { status: null, id: null, firstname: null, lastname: null });
