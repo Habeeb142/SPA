@@ -47,13 +47,21 @@ var mysql = require('mysql');
 
 //seting connection:::::::::::::::::::::::::::::::::::::::::
 let connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "root",
-    database: "spa_db"
-
+    host: "us-cdbr-east-05.cleardb.net",
+    user: "bf1b28b7238f54",
+    password: "455bb33d",
+    database: "heroku_490bccbc1f2bdbb"
 });
 
+connection.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+  var sql = "CREATE TABLE customers (id INT AUTO_INCREMENT PRIMARY KEY, firstname VARCHAR(255), lastname VARCHAR(255), mobile VARCHAR(255), file VARCHAR(255), password VARCHAR(255))";
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("Table created");
+  });
+});
 //index - onload::::::::::::::::::::::::;:::::::::::::::::::::::::::::::::
 epic.get('/', (req, res)=>{
     res.render('index', { status: null, id: null, firstname: null, lastname: null });
