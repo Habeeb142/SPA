@@ -39,17 +39,17 @@
 						<h3 class="text-light">Dashboard</h3>
                         <form class="row login_form" action="/detail_info" method="POST" id="contactForm" novalidate="novalidate">
                             <div class="offset-4">
-                                <img src="/userImages/<%=data.file%>" class="img-rounded" width="100" height="100" alt="img">
+                                <img src="http://res.cloudinary.com/dmdptkq8f/image/upload/v1590925892/ftjgynotv78uyoktcvim.jpg" class="img-rounded" width="100" height="100" alt="img">
                             </div>
                             <input type="hidden" name="id" value="<%=data.id%>">
 							<div class="col-md-12 form-group">
-								<input type="text" readonly class="form-control text-light" name="firstname" value="<%=data.firstname%>" style="background-color: black" placeholder="firstname" onfocus="this.placeholder = ''" onblur="this.placeholder = 'firstname'" id="readonly_input2">
+								<input type="text" readonly class="form-control text-light readonly_input" name="firstname" value="<%=data.firstname%>" style="background-color: black" placeholder="firstname" onfocus="this.placeholder = ''" onblur="this.placeholder = 'firstname'"">
 							</div>
 							<div class="col-md-12 form-group">
-								<input type="text" readonly class="form-control text-light" id="readonly_input3" name="lastname" value="<%=data.lastname%>" style="background-color: black" placeholder="lastname" onfocus="this.placeholder = ''" onblur="this.placeholder = 'lastname'">
+								<input type="text" readonly class="form-control text-light readonly_input" name="lastname" value="<%=data.lastname%>" style="background-color: black" placeholder="lastname" onfocus="this.placeholder = ''" onblur="this.placeholder = 'lastname'">
 							</div>
 							<div class="col-md-12 form-group">
-								<input type="number" readonly class="form-control text-light" id="readonly_input" name="mobile" value="<%=data.mobile%>" style="background-color: black" placeholder="Mobile" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mobile'">
+								<input type="number" readonly class="form-control text-light readonly_input" name="mobile" value="<%=data.mobile%>" style="background-color: black" placeholder="Mobile" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mobile'">
 							</div>
 							
 							
@@ -80,12 +80,12 @@
 <script>
     $('document').ready(function(){
         $('#edit_btn').click(function(){
-            $('#readonly_input').prop('readonly', false);
-            $('#readonly_input2').prop('readonly', false);
-            $('#readonly_input3').prop('readonly', false);
             $('#submit_btn').prop('hidden', false);
             $('#edit_btn').prop('hidden', true);
-            $('#readonly_input').focus();
+            $('.readonly_input').prop('readonly', false);
+            $('.readonly_input').focus();
+            $('.readonly_input').removeClass('text-light');
+            $('.readonly_input').addClass('text-info');
         })
     })
 </script>

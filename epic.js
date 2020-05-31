@@ -2,6 +2,14 @@
 const bcrypt = require('bcrypt')
 var salt = 10 //any random value
 
+// data encryption::::::::::::::::::::::::::::::::::::::::::::::::::
+var cloudinary = require('cloudinary')
+cloudinary.config({ 
+    cloud_name: 'dmdptkq8f', 
+    api_key: '546137779945263', 
+    api_secret: 'wi1HfJYXtYsj33Syg4u_NWBqXbs' 
+  });
+
 //making express available::::::::::::::::::::::::::::::::::::::::::::::::
 var express = require('express');
 const epic = express();
@@ -40,6 +48,7 @@ let connection = mysql.createConnection({
     user: "root",
     password: "root",
     database: "spa_db"
+
 });
 
 //index - onload::::::::::::::::::::::::;:::::::::::::::::::::::::::::::::
@@ -66,7 +75,7 @@ epic.post('/signup', (req, res)=>{
                 let tmp = files.file.path;
                 let pix = files.file.name;
                 let img = pix;
-                let imgLink = "public/userImages/"+pix;
+                let imgLink = "./public/userImages/"+pix;
 
                 let newUserInfo = {
                     firstname: fields.firstname,
@@ -75,41 +84,46 @@ epic.post('/signup', (req, res)=>{
                     password: fields.password,
                     file: img
                 }
+                // storing image url and other data in db
+                cloudinary.uploader.upload(tmp, function(result) { 
+
+                    // checking if mobile data already exist::::::::::::::::::::::::::::::::::::::::::::::::::::
+                    sql_select_mobile = `SELECT mobile FROM profile_tb where mobile = '${newUserInfo.mobile}'`;
+                    connection.query(sql_select_mobile, (err, data)=>{
+                        // if user already exist
+                        if(data.length) {
+                            res.render('signup', { status: 'user_already_exist', firstname: newUserInfo.firstname, mobile: null, lastname: fields.lastname })
+                        }
+                        // if user doesnt exist
+                        else {
+                            // encrypting password
+                            bcrypt.hash(newUserInfo.password, salt, (err, encrypted) => {
+                                newUserInfo.password = encrypted 
+    
+                                //putting into database and sending from temporary location to permanent location::::::::::::::::::::::::::::::::::::
+                                
+                                    sql_insert = `INSERT into profile_tb (firstname, lastname, mobile, password, file) values('${newUserInfo.firstname}', '${newUserInfo.lastname}', '${newUserInfo.mobile}','${newUserInfo.password}','${result.url}')`;
+                                    connection.query(sql_insert, (err,data)=>{
+                                        if(err) {
+                                            throw err;
+                                        }
+                                        else{
+                                            sql_select_id = `SELECT id FROM profile_tb where mobile = '${newUserInfo.mobile}' AND password = '${newUserInfo.password}'`;
+                                            connection.query(sql_select_id, (err, data)=>{
+                                                // console.log(data[0].id)
+                                                res.render('index', { status: 'signedIn', id: data[0].id, mobile: null});
+                                            })
+                                        }
+                                    });
+                                
+                                
+                            })
+                        }
+                    }) 
+
+                 })
 
                
-                // checking if mobile data already exist::::::::::::::::::::::::::::::::::::::::::::::::::::
-                sql_select_mobile = `SELECT mobile FROM profile_tb where mobile = '${newUserInfo.mobile}'`;
-                connection.query(sql_select_mobile, (err, data)=>{
-                    // if user already exist
-                    if(data.length) {
-                        res.render('signup', { status: 'user_already_exist', firstname: newUserInfo.firstname, mobile: null, lastname: fields.lastname })
-                    }
-                    // if user doesnt exist
-                    else {
-                        // encrypting password
-                        bcrypt.hash(newUserInfo.password, salt, (err, encrypted) => {
-                            newUserInfo.password = encrypted 
-
-                            //putting into database and sending from temporary location to permanent location::::::::::::::::::::::::::::::::::::
-                            fs.rename(tmp, imgLink, ()=>{
-                                sql_insert = `INSERT into profile_tb (firstname, lastname, mobile, password, file) values('${newUserInfo.firstname}', '${newUserInfo.lastname}', '${newUserInfo.mobile}','${newUserInfo.password}','${newUserInfo.file}')`;
-                                connection.query(sql_insert, (err,data)=>{
-                                    if(err) {
-                                        throw err;
-                                    }
-                                    else{
-                                        sql_select_id = `SELECT id FROM profile_tb where mobile = '${newUserInfo.mobile}' AND password = '${newUserInfo.password}'`;
-                                        connection.query(sql_select_id, (err, data)=>{
-                                            // console.log(data[0].id)
-                                            res.render('index', { status: 'signedIn', id: data[0].id, mobile: null});
-                                        })
-                                    }
-                                });
-                            
-                            });
-                        })
-                    }
-                }) 
             }
         else{
             res.render('signup', { status: 'password_err', firstname: fields.firstname, mobile: fields.mobile, lastname: fields.lastname })
@@ -174,10 +188,10 @@ epic.get('/dashboard/:data', (req, res)=>{
     // console.log(token)
     // id from cookie
     if(token!==undefined){
-
-        faker_id = token.slice(0,2);
         // id from url
         non_faker_id = req.params.data;
+        // checking if request param's length is one or two in other to slice the id well
+        (non_faker_id.length==1)? faker_id = token.slice(0,1) : faker_id = token.slice(0,2)
 
         // checking equalityies btw d id.s
         if(faker_id == non_faker_id) {
