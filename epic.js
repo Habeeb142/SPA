@@ -56,8 +56,8 @@ let connection = mysql.createConnection({
 connection.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
-  var sql = "CREATE TABLE customers (id INT AUTO_INCREMENT PRIMARY KEY, firstname VARCHAR(255), lastname VARCHAR(255), mobile VARCHAR(255), file VARCHAR(255), password VARCHAR(255))";
-  con.query(sql, function (err, result) {
+  var sql = "CREATE TABLE profile_tb (id INT AUTO_INCREMENT PRIMARY KEY, firstname VARCHAR(255), lastname VARCHAR(255), mobile VARCHAR(255), file VARCHAR(255), password VARCHAR(255))";
+  connection.query(sql, function (err, result) {
     if (err) throw err;
     console.log("Table created");
   });
